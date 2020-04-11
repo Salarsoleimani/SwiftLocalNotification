@@ -20,18 +20,19 @@ Pod::Spec.new do |s|
   s.description      = <<-DESC
 'Easy to use wrapper for UserNotifications Apple framework'
                        DESC
-
+  
   s.homepage         = 'https://github.com/salarsoleimani/SwiftLocalNotification'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'salarsoleimani' => 's.s_m1983@yahoo.com' }
-  s.source           = { :git => "https://github.com/salarsoleimani/SwiftLocalNotification.git", :branch => "master", :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/salarsoleimani/SwiftLocalNotification.git', :branch => 'master', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/salarsoleimani'
 
   s.ios.deployment_target = '10.0'
 
   s.source_files = 'SwiftLocalNotification/Classes/**/*'
   
+  s.swift_version = '5.0'
   # s.resource_bundles = {
   #   'SwiftLocalNotification' => ['SwiftLocalNotification/Assets/*.png']
   # }

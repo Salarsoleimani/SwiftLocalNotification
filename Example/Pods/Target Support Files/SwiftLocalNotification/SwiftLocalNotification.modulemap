@@ -1,0 +1,6 @@
+framework module SwiftLocalNotification {
+  umbrella header "SwiftLocalNotification-umbrella.h"
+
+  export *
+  module * { export * }
+}

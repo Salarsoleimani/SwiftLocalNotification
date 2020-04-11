@@ -1,0 +1,22 @@
+{
+  "name": "SwiftLocalNotification",
+  "version": "0.1.0",
+  "summary": "A short description of SwiftLocalNotification.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/salarsoleimani/SwiftLocalNotification",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "salarsoleimani": "s.s_m1983@yahoo.com"
+  },
+  "source": {
+    "git": "https://github.com/salarsoleimani/SwiftLocalNotification.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "SwiftLocalNotification/Classes/**/*"
+}

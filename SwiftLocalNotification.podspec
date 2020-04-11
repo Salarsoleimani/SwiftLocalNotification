@@ -25,7 +25,7 @@ Pod::Spec.new do |s|
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'salarsoleimani' => 's.s_m1983@yahoo.com' }
-  s.source           = { :git => 'https://github.com/salarsoleimani/SwiftLocalNotification.git', :tag => 0.1.0 }
+  s.source           = { :git => "https://github.com/salarsoleimani/SwiftLocalNotification.git", :branch => ,"master", :tag => ,"0.1.0" }
   s.social_media_url = 'https://twitter.com/salarsoleimani'
 
   s.ios.deployment_target = '10.0'

@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'SwiftLocalNotification_Example' do
+  pod 'SwiftLocalNotification', :path => '../'
+
+  target 'SwiftLocalNotification_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

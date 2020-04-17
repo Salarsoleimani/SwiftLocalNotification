@@ -155,19 +155,7 @@ public class SwiftLocalNotificationModel: NSObject {
     try container.encode(category, forKey: .category)
     try container.encode(isScheduled, forKey: .isScheduled)
   }
-  /// Adds a value to the specified key in the `userInfo` property. Note that the value is not added if the key is equal to the `identifierKey` or `dateKey`.
-  ///
-  /// - Parameters:
-  ///   - value: The value to set.
-  ///   - key: The key to set the value of.
-  public func setUserInfo(value: Any, forKey key: AnyHashable) {
-    if let keyString = key as? String {
-      if (keyString == SwiftLocalNotificationModel.identifierKey || keyString == SwiftLocalNotificationModel.dateKey) {
-        return
-      }
-    }
-    self.userInfo[key] = value
-  }
+
   /// Adds a value to the specified key in the `userInfo` property. Note that the value is not added if the key is equal to the `identifierKey` or `dateKey`.
   ///
   /// - Parameters:

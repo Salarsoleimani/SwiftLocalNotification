@@ -19,24 +19,18 @@ public class SwiftLocalNotificationCategory {
   /// Holds the identifier of the category type
   var identifier: String
   
-  public init (categoryIdentifier: String, actions: [UNNotificationAction] = [UNNotificationAction]()) {
+  public init (categoryIdentifier: String, actions: [UNNotificationAction]) {
     identifier = categoryIdentifier
     self.actions = actions
   }
   
-  @available(iOS 11.0, *)
-  public func addActionButton(identifier: String, title: String, actionOptions: UNNotificationActionOptions = [UNNotificationActionOptions.foreground], categoryOptions: UNNotificationCategoryOptions = [.hiddenPreviewsShowTitle]) {
-    let action = UNNotificationAction(identifier: identifier, title: title, options: actionOptions)
-    
-    actions.append(action)
-    categoryInstance = UNNotificationCategory(identifier: self.identifier, actions: self.actions, intentIdentifiers: [], options: categoryOptions)
-  }
-  
-  public func set() {
+  public func set(_ withCategoryOptions: UNNotificationCategoryOptions = [], forNotifications: SwiftLocalNotificationModel...) {
+    forNotifications.forEach({ (notif) in
+      notif.category = self.identifier
+    })
     var notificationCategories = Set<UNNotificationCategory>()
-    if let categoryInstance = categoryInstance {
-      notificationCategories.insert(categoryInstance)
-    }
+    categoryInstance = UNNotificationCategory(identifier: self.identifier, actions: self.actions, intentIdentifiers: [], options: withCategoryOptions)
+    notificationCategories.insert(categoryInstance!)
     UNUserNotificationCenter.current().setNotificationCategories(notificationCategories)
   }
 }

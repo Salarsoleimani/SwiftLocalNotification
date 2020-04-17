@@ -19,10 +19,10 @@ public class SwiftLocalNotification: NSObject, SwiftLocalNotificationInterface {
   private let notificationCenter: UNUserNotificationCenter
   private let permission: SwiftLocalNotificationPermission
   
-  public init(delegate: UNUserNotificationCenterDelegate? = nil, notificationPermissionOptions: UNAuthorizationOptions = [.alert, .badge, .sound]) {
+  public init(delegate: UNUserNotificationCenterDelegate? = nil, notificationPermissionOptions: UNAuthorizationOptions? = nil) {
     self.notificationCenter = UNUserNotificationCenter.current()
     self.notificationCenter.delegate = delegate
-    self.permission = SwiftLocalNotificationPermission(options: notificationPermissionOptions)
+    self.permission = SwiftLocalNotificationPermission(options: notificationPermissionOptions ?? [.alert, .badge, .sound])
   }
   
   public init(didRecieveResponse: (@escaping (UNNotificationResponse) -> Void), didRecieveNotificationInApp: (@escaping (UNNotification) -> Void), notificationPermissionOptions: UNAuthorizationOptions = [.alert, .badge, .sound]) {
@@ -33,8 +33,6 @@ public class SwiftLocalNotification: NSObject, SwiftLocalNotificationInterface {
   }
   
   private var notificationDelegate: SwiftLocalNotificationDelegate?
-  
-  
   
   public func getAllDeliveredNotifications() -> [SwiftLocalNotificationModel] {
     let semaphore = DispatchSemaphore(value: 0)
@@ -53,7 +51,7 @@ public class SwiftLocalNotification: NSObject, SwiftLocalNotificationInterface {
     var notifications = [SwiftLocalNotificationModel]()
     
     notificationCenter.getPendingNotificationRequests { (notifs) in
-      notifications = notifs.map{$0.asSwiftLocalNotification()}
+      notifications = notifs.map{$0.asSwiftLocalNotification()}.sorted{$0.fireDate ?? Date() < $1.fireDate ?? Date()}
       semaphore.signal()
     }
     
@@ -101,22 +99,23 @@ public class SwiftLocalNotification: NSObject, SwiftLocalNotificationInterface {
   }
   
   public func reSchedule(notification notif: SwiftLocalNotificationModel) -> String? {
-    cancel(notificationIds: notif.identifier ?? "")
+    cancel(notificationIds: notif.identifier)
     return schedule(notification: notif)
   }
   
   public func scheduleDaily(notifications notif: SwiftLocalNotificationModel, fromTime: Date, toTime: Date, howMany: Int) -> [String]? {
     notif.repeatInterval = .daily
     notif.region = nil
-    let todayFromDate = Date.getTodaysDateFor(timeString: fromTime.getTimeString())
-    let todayToDate = Date.getTodaysDateFor(timeString: toTime.getTimeString())
-    let differenceSeconds = todayToDate.timeIntervalSince(todayFromDate)
+    let differenceSeconds = toTime.timeIntervalSince(fromTime)
     var notifIds: [String]?
+    
     if differenceSeconds > 0 {
       notifIds = [String]()
       let intervalBetween = differenceSeconds / TimeInterval(howMany)
       for i in 0...howMany - 1 {
-        notif.fireDate = todayFromDate.addingTimeInterval(intervalBetween * TimeInterval(i))
+        let newDate = fromTime.addingTimeInterval(intervalBetween * TimeInterval(i))
+        notif.updateFireDate(newDate)
+        print(newDate)
         let notifId = schedule(notification: notif)
         notifIds!.append(notifId ?? "")
         if i == howMany - 1 {
@@ -128,22 +127,23 @@ public class SwiftLocalNotification: NSObject, SwiftLocalNotificationInterface {
   }
   
   public func scheduleDaily(notifications notifs: [SwiftLocalNotificationModel], fromTime: Date, toTime: Date) -> [String]? {
-    let todayFromDate = Date.getTodaysDateFor(timeString: fromTime.getTimeString())
-    let todayToDate = Date.getTodaysDateFor(timeString: toTime.getTimeString())
-    let differenceSeconds = abs(todayFromDate.timeIntervalSince(todayToDate))
+    let fromDateComponents = fromTime.convertToDateComponent(repeatInterval: .daily)
+    let toDateComponents = toTime.convertToDateComponent(repeatInterval: .daily)
+    let todayFromDate = Calendar.current.date(bySettingHour: fromDateComponents.hour ?? 0, minute: fromDateComponents.minute ?? 0, second: fromDateComponents.second ?? 0, of: Date()) ?? Date()
+    let todayToDate = Calendar.current.date(bySettingHour: toDateComponents.hour ?? 0, minute: toDateComponents.minute ?? 0, second: toDateComponents.second ?? 0, of: Date()) ?? Date()
+    let differenceSeconds = todayToDate.timeIntervalSince(todayFromDate)
     var notifIds: [String]? = nil
+    
     if differenceSeconds > 0 {
-      let intervalBetween = differenceSeconds / TimeInterval(notifs.count)
-      var i = 0
+      let intervalBetween = abs(differenceSeconds) / TimeInterval(notifs.count)
       notifIds = [String]()
-      for notif in notifs {
-        notif.repeatInterval = .daily
-        notif.region = nil
-        notif.fireDate = todayFromDate.addingTimeInterval(intervalBetween * TimeInterval(i))
-        i += 1
-        let notifId = schedule(notification: notif)
+      for (index, item) in notifs.enumerated() {
+        item.repeatInterval = .daily
+        item.region = nil
+        item.updateFireDate(todayFromDate.addingTimeInterval(intervalBetween * TimeInterval(index)))
+        let notifId = schedule(notification: item)
         notifIds!.append(notifId ?? "")
-        if i == notifs.count - 1 {
+        if index == notifs.count - 1 {
           return notifIds
         }
       }
@@ -151,22 +151,22 @@ public class SwiftLocalNotification: NSObject, SwiftLocalNotificationInterface {
     return notifIds
   }
   
+  ///
   public func schedule(notification notif: SwiftLocalNotificationModel, fromDate: Date, toDate: Date, interval: TimeInterval) -> String? {
     var i = 0
     notif.region = nil
     while fromDate.addingTimeInterval(interval * TimeInterval(i)) < toDate {
       i += 1
       let fireDate = fromDate.addingTimeInterval(interval * TimeInterval(i))
-      notif.fireDate = fireDate
+      notif.updateFireDate(fireDate)
       return schedule(notification: notif)
     }
     return nil
   }
   
-  public func push(notification notif: SwiftLocalNotificationModel, secondsLater seconds: TimeInterval, repeats: Bool) -> String? {
-    notif.region = nil
-    notif.fireDate = Date()
-    let trigger = UNTimeIntervalNotificationTrigger(timeInterval: seconds, repeats: repeats)
+  public func push(notification notif: SwiftLocalNotificationModel, secondsLater seconds: TimeInterval) -> String? {
+    let dateComponents = Date().addingTimeInterval(seconds).convertToDateComponent(repeatInterval: .minute)
+    let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: notif.repeats)
     let scheduledNotifCount = getScheduledNotificationsCount()
     if scheduledNotifCount < maximumScheduledNotifications {
       return internalSchedule(notification: notif, trigger: trigger)
@@ -184,16 +184,10 @@ public class SwiftLocalNotification: NSObject, SwiftLocalNotificationInterface {
       UIApplication.shared.applicationIconBadgeNumber -= value
     }
   }
-  public func requestPermission() -> PermissionStatus {
-    let semaphore = DispatchSemaphore(value: 0)
-    var status: PermissionStatus = .notDetermined
-    
-    permission.requestNotifications { (newStatus) in
-      status = newStatus
+  public func requestPermission(completion: @escaping (PermissionStatus) -> Void) {
+    permission.requestNotifications { [completion] (newStatus) in
+      completion(newStatus)
     }
-    
-    _ = semaphore.wait(timeout: .distantFuture)
-    return status
   }
   
   public func cancelAllNotifications() {
@@ -219,17 +213,18 @@ public class SwiftLocalNotification: NSObject, SwiftLocalNotificationInterface {
     if let trig = trig {
       trigger = trig
     }
+    
     let content = UNMutableNotificationContent()
     content.title = notification.title ?? ""
     content.body = notification.body ?? ""
     content.subtitle = notification.subtitle ?? ""
-    
+    content.badge = Int(notification.badge ?? 0) as NSNumber
     content.sound = notification.soundName != nil ? UNNotificationSound(named: UNNotificationSoundName( notification.soundName!)) : UNNotificationSound.default
-    if !(notification.attachments == nil) { content.attachments = notification.attachments! }
-    if !(notification.category == nil) { content.categoryIdentifier = notification.category! }
+    if notification.attachments != nil { content.attachments = notification.attachments! }
+    if notification.category != nil { content.categoryIdentifier = notification.category! }
     content.userInfo = notification.userInfo
     
-    notification.localNotificationRequest = UNNotificationRequest(identifier: notification.identifier!, content: content, trigger: trigger)
+    notification.localNotificationRequest = UNNotificationRequest(identifier: notification.identifier, content: content, trigger: trigger)
     
     let semaphore = DispatchSemaphore(value: 0)
     var notificationId: String?

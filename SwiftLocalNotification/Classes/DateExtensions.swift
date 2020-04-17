@@ -27,25 +27,18 @@ extension Date {
       return Calendar.current.dateComponents([.hour, .minute, .day, .month], from: self)
     }
   }
-  
-  func getTimeString() -> String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "HH:mm"
-    return formatter.string(from: self)
-  }
-  
-  static func getTodaysDateFor(timeString: String) -> Date {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "HH:mm"
-    let dateFromString = formatter.date(from: timeString) ?? Date()
-    let hour = Calendar.current.component(.hour, from: dateFromString)
-    let minute = Calendar.current.component(.minute, from: dateFromString)
-    let todayDate = Calendar.current.date(bySettingHour: hour, minute: minute, second: 0, of: Date()) ?? Date()
-    return todayDate
-  }
 }
 
-extension Date {
+public extension Date {
+  
+  /// Adds a number of seconds to a date.
+  /// > This method can add and subtract minutes.
+  ///
+  /// - Parameter seconds: The number of minutes to add/subtract.
+  /// - Returns: The date after the seconds addition/subtraction.
+  func next(seconds: TimeInterval) -> Date {
+    return self.addingTimeInterval(seconds)
+  }
   
   /// Adds a number of minutes to a date.
   /// > This method can add and subtract minutes.

@@ -19,28 +19,28 @@ public class SwiftLocalNotificationModel: NSObject {
   var repeatInterval: RepeatingInterval = .none
   
   ///Holds the body of the message of the notification
-  var body: String?
+  fileprivate(set) public var body: String?
   
   ///Holds the title of the message of the notification
-  var title: String?
+  fileprivate(set) public var title: String?
   
   ///Holds the subtitle of the message of the notification
-  var subtitle: String?
+  fileprivate(set) public var subtitle: String?
   
   ///Holds name of the music file of the notification
-  var soundName: String?
+  fileprivate(set) public var soundName: String?
   
   ///Holds the date that the notification will be first fired
-  var fireDate: Date?
+  fileprivate(set) public var fireDate: Date?
   
   ///Know if a notification repeats from this value
-  var repeats: Bool = false
+  fileprivate(set) public var repeats: Bool = false
   
   ///Hold the identifier of the notification to keep track of it
-  fileprivate(set) public var identifier: String!
+  fileprivate(set) public var identifier: String
   
   ///Number to display on the application icon.
-  var badge: Int?
+  fileprivate(set) public var badge: Int?
   
   ///Hold the attachments for the notifications
   public var attachments: [UNNotificationAttachment]?
@@ -66,6 +66,9 @@ public class SwiftLocalNotificationModel: NSObject {
   /// A key that holds the repeating of the notification; stored in the `userInfo` property.
   public static let repeatingKey: String = "SwiftLocalNotificationRepeatingKey"
   
+  /// A key that holds the repeating of the notification; stored in the `userInfo` property.
+  public static let soundNameKey: String = "SwiftLocalNotificationSoundNameKey"
+  
   enum CodingKeys: String, CodingKey {
     case localNotificationRequest
     case repeatInterval
@@ -85,20 +88,21 @@ public class SwiftLocalNotificationModel: NSObject {
     case isScheduled
   }
   
-  public init(title: String, body: String, date: Date, repeating: RepeatingInterval, identifier: String = UUID().uuidString, subtitle: String? = "", soundName: String? = nil, badge: Int? = 1) {
+  public init(title: String, body: String, subtitle: String? = "", date: Date, repeating: RepeatingInterval, identifier: String = UUID().uuidString, soundName: String? = nil, badge: Int? = 1) {
     self.body = title
     self.title = body
     self.subtitle = subtitle
     self.fireDate = date
     self.repeatInterval = repeating
-    self.identifier = identifier
+    self.identifier = identifier == "" ? UUID().uuidString : identifier
     self.soundName = soundName
     self.badge = badge
-    self.repeats = repeats == .none ? false : true
+    self.repeats = repeating == .none ? false : true
     self.userInfo = [
       SwiftLocalNotificationModel.identifierKey : identifier,
       SwiftLocalNotificationModel.dateKey : date,
-      SwiftLocalNotificationModel.repeatingKey: repeating.rawValue
+      SwiftLocalNotificationModel.repeatingKey: repeating.rawValue,
+      SwiftLocalNotificationModel.soundNameKey: soundName ?? ""
     ]
   }
   
@@ -108,7 +112,7 @@ public class SwiftLocalNotificationModel: NSObject {
     self.body = body
     self.title = title
     self.subtitle = subtitle
-    self.identifier = identifier
+    self.identifier = identifier == "" ? UUID().uuidString : identifier
     self.region = region
     self.soundName = soundName
     self.repeats = repeats
@@ -116,7 +120,8 @@ public class SwiftLocalNotificationModel: NSObject {
     region?.notifyOnEntry = notifyOnEntry
     self.userInfo = [
       SwiftLocalNotificationModel.identifierKey : identifier,
-      SwiftLocalNotificationModel.dateKey : Date()
+      SwiftLocalNotificationModel.dateKey : Date(),
+      SwiftLocalNotificationModel.soundNameKey: soundName ?? ""
     ]
   }
   
@@ -130,7 +135,7 @@ public class SwiftLocalNotificationModel: NSObject {
     self.soundName =  try container.decode(String.self, forKey: .soundName)
     self.fireDate = try container.decodeIfPresent(Date.self, forKey: .fireDate)
     self.repeats = try container.decode(Bool.self, forKey: .repeats)
-    self.identifier = try container.decodeIfPresent(String.self, forKey: .identifier)
+    self.identifier = try container.decode(String.self, forKey: .identifier)
     self.badge = try container.decodeIfPresent(Int.self, forKey: .badge)
     self.category = try container.decodeIfPresent(String.self, forKey: .category)
     self.isScheduled = try container.decode(Bool.self, forKey: .isScheduled)
@@ -150,7 +155,19 @@ public class SwiftLocalNotificationModel: NSObject {
     try container.encode(category, forKey: .category)
     try container.encode(isScheduled, forKey: .isScheduled)
   }
-  
+  /// Adds a value to the specified key in the `userInfo` property. Note that the value is not added if the key is equal to the `identifierKey` or `dateKey`.
+  ///
+  /// - Parameters:
+  ///   - value: The value to set.
+  ///   - key: The key to set the value of.
+  public func setUserInfo(value: Any, forKey key: AnyHashable) {
+    if let keyString = key as? String {
+      if (keyString == SwiftLocalNotificationModel.identifierKey || keyString == SwiftLocalNotificationModel.dateKey) {
+        return
+      }
+    }
+    self.userInfo[key] = value
+  }
   /// Adds a value to the specified key in the `userInfo` property. Note that the value is not added if the key is equal to the `identifierKey` or `dateKey`.
   ///
   /// - Parameters:
@@ -180,6 +197,9 @@ public class SwiftLocalNotificationModel: NSObject {
     self.userInfo.removeValue(forKey: key)
   }
   
+  public func updateFireDate(_ fireDate: Date) {
+    self.fireDate = fireDate
+  }
   public override var description: String {
     var result  = ""
     result += "SwiftLocalNotification: \(String(describing: self.identifier))\n"

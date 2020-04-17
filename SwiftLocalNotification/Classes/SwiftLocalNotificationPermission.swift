@@ -31,17 +31,17 @@ final class SwiftLocalNotificationPermission {
   var callback: Callback?
   
   func callbacks(_ with: PermissionStatus) {
-    DispatchQueue.main.async {
-      self.callback?(self.status)
+    DispatchQueue.main.async { [callback, status] in
+      callback?(status)
     }
   }
   
   func requestNotifications(_ callback: Callback) {
-    UNUserNotificationCenter.current().requestAuthorization(options: options) { granted, error in
+    UNUserNotificationCenter.current().requestAuthorization(options: options) { [callbacks, statusNotifications] granted, error in
       Defaults.requestedNotifications = true
       
       DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-        self.callbacks(self.statusNotifications)
+        callbacks(statusNotifications)
       }
     }
   }

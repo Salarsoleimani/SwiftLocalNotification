@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
-    <device id="retina4_7" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="vXZ-lx-hvc">
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Main View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="SwiftLocalNotification_Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="MainViewController" customModule="SwiftLocalNotification_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -20,11 +18,91 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="m03-nk-Ph9">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="166"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="FYl-6K-Orm">
+                                        <rect key="frame" x="8" y="8" width="359" height="150"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vEo-8G-sqK">
+                                                <rect key="frame" x="29" y="0.0" width="301" height="30"/>
+                                                <state key="normal" title="Request notification permission authrization"/>
+                                                <connections>
+                                                    <action selector="requestButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="spI-8n-bj0"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dpR-CR-29M">
+                                                <rect key="frame" x="98.5" y="30" width="162" height="30"/>
+                                                <state key="normal" title="Add sample notification"/>
+                                                <connections>
+                                                    <action selector="scheduleSampleNotificationButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="qTl-IJ-JBb"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jQe-Ws-2qk">
+                                                <rect key="frame" x="0.5" y="60" width="358" height="30"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                                <state key="normal" title="Add daily notification 20 times: now to 1 minute later"/>
+                                                <connections>
+                                                    <action selector="scheduleDailyNotificationButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Xdj-fH-xWn"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Pth-Ye-P7W">
+                                                <rect key="frame" x="13" y="90" width="333" height="30"/>
+                                                <state key="normal" title="Add 2 diffrent notifications: now to 1 minute later"/>
+                                                <connections>
+                                                    <action selector="scheduleNotificationsButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="lP7-ZF-zOR"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IdN-C6-HKr">
+                                                <rect key="frame" x="102" y="120" width="155" height="30"/>
+                                                <state key="normal" title="Cancel all notifications"/>
+                                                <connections>
+                                                    <action selector="cancelAllNotificationButtonPressed:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Cwz-dI-sZd"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="FYl-6K-Orm" secondAttribute="trailing" constant="8" id="DEV-ca-alC"/>
+                                    <constraint firstItem="FYl-6K-Orm" firstAttribute="leading" secondItem="m03-nk-Ph9" secondAttribute="leading" constant="8" id="L59-Yd-a1g"/>
+                                    <constraint firstAttribute="bottom" secondItem="FYl-6K-Orm" secondAttribute="bottom" constant="8" id="WKI-DS-9UK"/>
+                                    <constraint firstItem="FYl-6K-Orm" firstAttribute="top" secondItem="m03-nk-Ph9" secondAttribute="top" constant="8" id="u2H-4i-CkW"/>
+                                </constraints>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="↓ Notifications ↓" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yfd-Cv-Lwc">
+                                <rect key="frame" x="106" y="174" width="163.5" height="24"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="36J-gD-Uhs">
+                                <rect key="frame" x="16" y="206" width="343" height="461"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="yfd-Cv-Lwc" firstAttribute="top" secondItem="m03-nk-Ph9" secondAttribute="bottom" constant="8" id="0cH-wq-Dhk"/>
+                            <constraint firstItem="36J-gD-Uhs" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="1Kt-ol-Ayt"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="36J-gD-Uhs" secondAttribute="trailing" id="AQf-SD-hQI"/>
+                            <constraint firstItem="m03-nk-Ph9" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="DVC-GS-cPk"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="36J-gD-Uhs" secondAttribute="bottom" id="GEA-gE-dIE"/>
+                            <constraint firstAttribute="trailing" secondItem="m03-nk-Ph9" secondAttribute="trailing" id="Swj-Bn-GBC"/>
+                            <constraint firstItem="yfd-Cv-Lwc" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="q4X-Ao-J2r"/>
+                            <constraint firstItem="36J-gD-Uhs" firstAttribute="top" secondItem="yfd-Cv-Lwc" secondAttribute="bottom" constant="8" id="r9e-RP-QTR"/>
+                            <constraint firstItem="m03-nk-Ph9" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="tnW-Wr-KqY"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="notificationsTableView" destination="36J-gD-Uhs" id="N9U-JR-efz"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="140" y="133.5832083958021"/>
         </scene>
     </scenes>
 </document>

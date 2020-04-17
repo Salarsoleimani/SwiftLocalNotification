@@ -8,23 +8,24 @@
 
 import UserNotifications
 
-extension UNNotification {
+public extension UNNotification {
   func asSwiftLocalNotification() -> SwiftLocalNotificationModel {
     let id = self.request.identifier
     let content = self.request.content
     var fireDate: Date?
-    if let trigger = self.request.trigger as? UNCalendarNotificationTrigger {
-      fireDate = trigger.nextTriggerDate()
-    }
-    if let trigger = self.request.trigger as? UNTimeIntervalNotificationTrigger {
-      fireDate = trigger.nextTriggerDate()
+        if let date = content.userInfo[SwiftLocalNotificationModel.dateKey] as? Date {
+      fireDate = date
     }
     var repeating: RepeatingInterval = .none
-    if let trigger = self.request.trigger, trigger.repeats, let userInfo = content.userInfo as? [String: String], let repeatingString = userInfo["repeating"] {
+    if let repeatingString = content.userInfo[SwiftLocalNotificationModel.repeatingKey] as? String {
       repeating = RepeatingInterval(rawValue: repeatingString) ?? .none
     }
     let badge = Int(exactly: content.badge ?? 0) ?? 0
-    let sasNotif = SwiftLocalNotificationModel(title: content.title, body: content.body, date: fireDate ?? Date(), repeating: repeating, identifier: id, subtitle: content.subtitle, soundName: nil, badge: badge)
+    var soundName: String?
+    if let soundNameString = content.userInfo[SwiftLocalNotificationModel.soundNameKey] as? String {
+      soundName = soundNameString != "" ? soundNameString : nil
+    }
+    let sasNotif = SwiftLocalNotificationModel(title: content.title, body: content.body, subtitle: content.subtitle, date: fireDate ?? Date(), repeating: repeating, identifier: id, soundName: soundName, badge: badge)
     sasNotif.setAllUserInfo(content.userInfo)
     
     sasNotif.category = self.request.content.categoryIdentifier

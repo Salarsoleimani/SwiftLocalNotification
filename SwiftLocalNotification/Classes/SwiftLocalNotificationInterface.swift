@@ -11,7 +11,7 @@ import Foundation
 public protocol SwiftLocalNotificationInterface {
   var permissionStatus: PermissionStatus { get }
   
-  func requestPermission() -> PermissionStatus
+  func requestPermission(completion: @escaping (PermissionStatus) -> Void)
 
   func getAllScheduledNotifications() -> [SwiftLocalNotificationModel]
   func getAllDeliveredNotifications() -> [SwiftLocalNotificationModel]
@@ -24,7 +24,7 @@ public protocol SwiftLocalNotificationInterface {
   func scheduleDaily(notifications notif: SwiftLocalNotificationModel, fromTime: Date, toTime: Date, howMany: Int) -> [String]?
   func scheduleDaily(notifications notifs: [SwiftLocalNotificationModel], fromTime: Date, toTime: Date) -> [String]?
   func schedule(notification notif: SwiftLocalNotificationModel, fromDate: Date, toDate: Date, interval: TimeInterval) -> String?
-  func push(notification notif: SwiftLocalNotificationModel, secondsLater seconds: TimeInterval, repeats: Bool) -> String?
+  func push(notification notif: SwiftLocalNotificationModel, secondsLater seconds: TimeInterval) -> String?
     
   func setApplicationBadge(_ option: BadgeOption, value: Int)
     

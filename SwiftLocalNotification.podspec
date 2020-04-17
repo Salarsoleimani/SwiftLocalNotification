@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SwiftLocalNotification'
-  s.version          = '0.1.2'
+  s.version          = '1.0.1'
   s.summary          = 'Easy to use wrapper for UserNotifications Apple framework'
 
 # This description is used to generate tags and improve search results.
@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   s.homepage         = 'https://github.com/salarsoleimani/SwiftLocalNotification'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'salarsoleimani' => 's.s_m1983@yahoo.com' }
+  s.author           = { 'Salar Soleimani' => 's.s_m1983@yahoo.com' }
   s.source           = { :git => 'https://github.com/salarsoleimani/SwiftLocalNotification.git', :branch => 'master', :tag => s.version.to_s }
   s.social_media_url = 'https://twitter.com/salarsoleimani'
 

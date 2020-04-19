@@ -1,6 +1,7 @@
 # SwiftLocalNotification
 #### Easy to use, Easy to push local notification in swift.
-<img = "https://github.com/Salarsoleimani/SwiftLocalNotification/blob/master/SwiftLocalNotificationHeader.png" class="center">
+<img src="https://github.com/Salarsoleimani/SwiftLocalNotification/blob/master/SwiftLocalNotificationHeader.png" class="center">
+
 [![CI Status](https://img.shields.io/travis/salarsoleimani/SwiftLocalNotification.svg?style=flat)](https://travis-ci.org/salarsoleimani/SwiftLocalNotification)
 [![Version](https://img.shields.io/cocoapods/v/SwiftLocalNotification.svg?style=flat)](https://cocoapods.org/pods/SwiftLocalNotification)
 [![License](https://img.shields.io/cocoapods/l/SwiftLocalNotification.svg?style=flat)](https://cocoapods.org/pods/SwiftLocalNotification)

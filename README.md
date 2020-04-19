@@ -1,5 +1,5 @@
 # SwiftLocalNotification
-##### Easy to use, Easy to push local notification in swift.<img src="https://github.com/salarsoleimani/BEKDesing/blob/master/Images/BEKHeader.png">
+##### Easy to use, Easy to push local notification in swift.<img src="https://github.com/Salarsoleimani/SwiftLocalNotification/blob/master/SwiftLocalNotificationHeader.png">
 [![CI Status](https://img.shields.io/travis/salarsoleimani/SwiftLocalNotification.svg?style=flat)](https://travis-ci.org/salarsoleimani/SwiftLocalNotification)
 [![Version](https://img.shields.io/cocoapods/v/SwiftLocalNotification.svg?style=flat)](https://cocoapods.org/pods/SwiftLocalNotification)
 [![License](https://img.shields.io/cocoapods/l/SwiftLocalNotification.svg?style=flat)](https://cocoapods.org/pods/SwiftLocalNotification)
@@ -10,8 +10,10 @@ SwiftLocalNotification is available through [CocoaPods](https://cocoapods.org). 
 pod 'SwiftLocalNotification'
 ```
 ## Demo
-<img src="https://github.com/behrad-kzm/BEKCurveTabbar/blob/master/Preview.png" height="350">
+<img src="https://github.com/Salarsoleimani/SwiftLocalNotification/blob/master/Screenshot.jpeg" height="600">
+
 ## Usage example
+
 ```swift
 // set the delegate to get the UNUserNotificationCenter delegates
 let scheduler = SwiftLocalNotification(delegate: self) 
@@ -27,9 +29,11 @@ category.set(forNotifications: sampleNotification)
 // finally schedule the notification
 scheduler.schedule(sampleNotification)
 ```
+
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Usecases
+
 ```swift
 // get the permission status of notification privacy
 var permissionStatus: PermissionStatus { get }

@@ -35,36 +35,51 @@ scheduler.schedule(sampleNotification)
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
 
 ## Usecases
-
+Get the permission status of notification privacy and request for permission for push the notification.
 ```swift
-// get the permission status of notification privacy
 var permissionStatus: PermissionStatus { get }
-// request for permission for push the notification
 func requestPermission(completion: @escaping (PermissionStatus) -> Void)
-
+```
+Get all and specific scheduled or delivered notifications. get the quantity of scheduled notifications.
+```swift
 func getAllScheduledNotifications() -> [SwiftLocalNotificationModel]
 func getAllDeliveredNotifications() -> [SwiftLocalNotificationModel]
 func getScheduled(notificationId id: String) -> SwiftLocalNotificationModel?
 func getDelivered(notificationId id: String) -> SwiftLocalNotificationModel?
 func getScheduledNotificationsCount() -> Int
-
+```
+Schedule notification
+```swift
 func schedule(notification notif: SwiftLocalNotificationModel) -> String?
-// edit the existing notification
+```
+Edit the existing notification
+```swift
 func reSchedule(notification notif: SwiftLocalNotificationModel) -> String?
-// schedule one daily notification from a specific time for example "08:00" to a specific time and determine to how many times user get the notification
+```
+Schedule one daily notification from a specific time for example "08:00" to a specific time and determine to how many times user get the notification
+```swift
 func scheduleDaily(notifications notif: SwiftLocalNotificationModel, fromTime: Date, toTime: Date, howMany: Int) -> [String]?
-// schedule set of notifications between two specific dates
+```
+Schedule set of notifications between two specific dates
+```swift
 func scheduleDaily(notifications notifs: [SwiftLocalNotificationModel], fromTime: Date, toTime: Date) -> [String]?
-// schedule a notification between two specific dates by adding interval after from date
+```
+Schedule a notification between two specific dates by adding interval after from date
+```swift
 func schedule(notification notif: SwiftLocalNotificationModel, fromDate: Date, toDate: Date, interval: TimeInterval) -> String?
-// simple push notification
+```
+Simple push notification
+```swift
 func push(notification notif: SwiftLocalNotificationModel, secondsLater seconds: TimeInterval) -> String?)
-// set the badge of application
+```
+Set the badge of application
+```swift
 func setApplicationBadge(_ option: BadgeOption, value: Int)
-    
+```
+Cancel notifications
+```swift
 func cancelAllNotifications()
 func cancel(notificationIds: String...)
-func cancel(notificationIds: [String])
 ```
 ## Author
 

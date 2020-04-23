@@ -29,7 +29,7 @@ public protocol SwiftLocalNotificationInterface {
   // schedule a notification between two specific dates by adding interval after from date
   func schedule(notification notif: SwiftLocalNotificationModel, fromDate: Date, toDate: Date, interval: TimeInterval) -> String?
   // simple push notification
-  func push(notification notif: SwiftLocalNotificationModel, secondsLater seconds: TimeInterval) -> String?)
+  func push(notification notif: SwiftLocalNotificationModel, secondsLater seconds: TimeInterval) -> String?
   // set the badge of application
   func setApplicationBadge(_ option: BadgeOption, value: Int)
     

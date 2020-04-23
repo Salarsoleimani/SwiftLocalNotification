@@ -219,7 +219,11 @@ public class SwiftLocalNotification: NSObject, SwiftLocalNotificationInterface {
     content.body = notification.body ?? ""
     content.subtitle = notification.subtitle ?? ""
     content.badge = Int(notification.badge ?? 0) as NSNumber
-    content.sound = notification.soundName != nil ? UNNotificationSound(named: UNNotificationSoundName( notification.soundName!)) : UNNotificationSound.default
+    #if swift(<5.0)
+    content.sound = notification.soundName != nil ? UNNotificationSound(named: UNNotificationSoundName(string: notification.soundName ?? "")) : UNNotificationSound.default()
+    #else
+    content.sound = notification.soundName != nil ? UNNotificationSound(named: UNNotificationSoundName(rawValue: notification.soundName ?? "")) : UNNotificationSound.default
+    #endif
     if notification.attachments != nil { content.attachments = notification.attachments! }
     if notification.category != nil { content.categoryIdentifier = notification.category! }
     content.userInfo = notification.userInfo

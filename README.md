@@ -1,5 +1,8 @@
 # SwiftLocalNotification
 #### Easy to use, Easy to push local notification in swift.
+
+Easy and fast Local Notification in ios. Wrapper for apple UserNotifications framework with different usecases.
+
 <img src="https://github.com/Salarsoleimani/SwiftLocalNotification/blob/master/SwiftLocalNotificationHeader.png" class="center">
 
 [![CI Status](https://img.shields.io/travis/salarsoleimani/SwiftLocalNotification.svg?style=flat)](https://travis-ci.org/salarsoleimani/SwiftLocalNotification)
